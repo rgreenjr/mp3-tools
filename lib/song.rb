@@ -3,6 +3,8 @@ require 'mp3info'
 require 'string_extensions'
 
 class Song
+  
+  attr_accessor :path
 
   def initialize(path)
     @path = path
@@ -101,7 +103,7 @@ class Song
   def write_tag(tag, value)
     return if value == @info.tag2[tag]
     puts "    * #{@info.tag2[tag]}\n   ** #{value}"
-    @info.tag2[tag] = value
+    # @info.tag2[tag] = value
   end
 
 end

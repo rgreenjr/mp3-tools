@@ -5,10 +5,6 @@ class Artist
 
   attr_reader :path, :name
 
-  def self.glob(path, pattern='')
-    Dir.glob(File.join(path, "*#{pattern}*")).map {|file| Artist.new(file)}
-  end
-
   def initialize(path)
     @path, @name = path, File.basename(path)
   end
