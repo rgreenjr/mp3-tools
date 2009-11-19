@@ -12,33 +12,41 @@ class StringExtensionTest < Test::Unit::TestCase
     string = string.canonicalize_opus
   end
   
-  def test_all
-    assert_equal("2112: Overture/The Temples of Syrinx", apply_all("2112: Overture/The Temples of Syrinx"))
-    assert_equal("Sleeping Beauty: The Panorama", apply_all("Sleeping Beauty: The Panorama"))
-    assert_equal("Ballade No. 2 Op. 38 in F major", apply_all("Ballade No 2 Op 38 in F"))
-    assert_equal("Ballade No. 2 in F major, Op. 38", apply_all("Ballade No 2 in F, Op 38"))
-    assert_equal("Piano Concerto in A sharp minor: I. Allegro", apply_all("Piano Concerto In A-Sharp Minor: 1. Allegro"))
-    assert_equal("Piano Concerto in A major", apply_all("Piano Concerto In A"))
-    assert_equal("Piano Concerto in C sharp minor: II. Allegro", apply_all("Piano Concerto In c Sharp Minor: 2. Allegro"))
-    assert_equal("Piano Concerto in E major: II. Allegro", apply_all("Piano Concerto In E: 2. Allegro"))
-    assert_equal("Piano Concerto in A flat minor: IX. Allegro", apply_all("Piano Concerto In A-Flat Minor: 9. Allegro"))
-    assert_equal("Piano Concerto in B flat minor: III. Allegro", apply_all("Piano Concerto In B Flat Minor: 3. Allegro"))
-    assert_equal("Piano Concerto in A sharp major, K.32: V. Allegro", apply_all("Piano  Concerto In A-Sharp, K.32: 5. Allegro"))
+  def test_combining_all
+    assert_equal("Ballade No. 2 Op. 38 in F major", apply_all("Ballade   No 2 Op 38 in F"))
+    assert_equal("Ballade No. 2 in F major, Op. 38", apply_all("Ballade No 2 in F, Op 38 "))
     assert_equal("Piano Concerto in G sharp major: V. Allegro", apply_all("   Piano  Concerto In g-Sharp: 5. Allegro"))
-    assert_equal("Piano Concerto in D flat major: V. Allegro", apply_all("Piano  Concerto In d flat:   5. Allegro  "))
+    assert_equal("Piano Concerto in D flat major: VII. Allegro", apply_all("Piano  Concerto In d flat:   7. Allegro  "))
     assert_equal("Piano Concerto in B flat major: V. Allegro", apply_all("Piano  Concerto In B-flat: 5. Allegro  "))
     assert_equal("Concerto No. 5 in B flat major, BWV 1051: II. Adagio ma non tanto", apply_all("Concerto No. 5 in B-flat, BWV 1051: II. Adagio ma non tanto"))
-    assert_equal("The Musical Offering, BWV 1079: Fuga canonica in Epidiapente", apply_all("The Musical Offering, BWV 1079: Fuga canonica in Epidiapente"))
     assert_equal("Polonaise Op. 44 in F sharp minor", apply_all("Polonaise Op 44 in F sharp minor"))
     assert_equal("Piano Concerto in B major", apply_all("Piano  Concerto In B"))
     assert_equal("Keyboard Concerto No. 4 in A major, BWV1055: III. Allegro ma non tanto", apply_all("Keyboard Concerto No. 4 in A major, BWV1055: III. Allegro ma non tanto"))
     assert_equal("Fantasy in F minor/A flat major, Op. 49", apply_all("Fantasy in F minor/A flat major, Op. 49"))
-    assert_equal("Billy the Kid (Ballet Suite): II. Street in a Frontier Town", apply_all("Billy the Kid (Ballet Suite): II. Street in A Frontier Town"))
-    assert_equal("** Hark! The Herald Angels Sings/It Came upon a Midnight Clear", apply_all("** Hark! The Herald Angels Sings/It Came upon a Midnight Clear"))
     assert_equal("Concerto No. 7 in B flat major. I Capriccio", apply_all("Concerto No. 7 in B flat major. I Capriccio"))
     assert_equal("Sonata No. 3 in F minor Op. 5 - V. Finale: Allegro moderato ma rubato", apply_all("Sonata No.3 in F minor op.5 - V. Finale: Allegro moderato ma rubato"))
     assert_equal("V. The Little Shepherd", apply_all("V. The Little Shepherd"))
-    # assert_equal("Fantasy in F minor/A flat major, Op. 49", apply_all("Fantasy in F minor/A flat, Op. 49"))
+  end
+  
+  def test_canonicalize_key_signature
+    assert_equal("Piano Concerto in A sharp minor: I. Allegro", "Piano Concerto In A-Sharp Minor: I. Allegro".canonicalize_key_signature)
+    assert_equal("Piano Concerto in A major", "Piano Concerto In A".canonicalize_key_signature)
+    assert_equal("Piano Concerto in C sharp minor: II. Allegro", "Piano Concerto In c Sharp Minor: II. Allegro".canonicalize_key_signature)
+    assert_equal("Concerto in E major: II. Allegro", "Concerto In E: II. Allegro".canonicalize_key_signature)
+    assert_equal("Piano Concerto in A flat minor: 9. Allegro", "Piano Concerto In A-Flat Minor: 9. Allegro".canonicalize_key_signature)
+    assert_equal("Piano Concerto in B flat minor: III. Allegro", "Piano Concerto In B Flat Minor: III. Allegro".canonicalize_key_signature)
+    assert_equal("Piano Concerto in A sharp major, K.32: V. Allegro", "Piano Concerto In A-Sharp, K.32: V. Allegro".canonicalize_key_signature)
+    assert_equal("The Musical Offering, BWV 1079: Fuga canonica in Epidiapente", apply_all("The Musical Offering, BWV 1079: Fuga canonica in Epidiapente"))
+    # assert_equal("He Was in a Major Situation", "He Was In A Major Situation".canonicalize_key_signature)
+  end
+  
+  def test_downcase_prepositions
+    assert_equal("Until the End", "Until The End".downcase_prepositions)
+    assert_equal("Moonshine: The Movie", "Moonshine: The Movie".downcase_prepositions)
+    assert_equal("Rain - A Soundtrack for Meditation", "Rain - A Soundtrack For Meditation".downcase_prepositions)
+    assert_equal("Hark! The Herald Angels Sings", "Hark! The Herald Angels Sings".downcase_prepositions)
+    assert_equal("2112: Overture/The Temples of Syrinx", "2112: Overture/The Temples of Syrinx".downcase_prepositions)
+    assert_equal("Billy the Kid (Ballet Suite): II. Street in a Frontier Town", "Billy the Kid (Ballet Suite): II. Street in A Frontier Town".downcase_prepositions)
   end
 
   def test_canonicalize_opus

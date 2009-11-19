@@ -34,7 +34,7 @@ class String
 
   def downcase_prepositions
     %w{A And As At By For From Of In On Or The To With}.inject(self) do |string, word| 
-      string.gsub(/([^:;!\.-\/]) #{word} /) do |m|
+      string.gsub(/(\w) #{word} /) do |m|
         "#{$1} #{word.downcase} "
       end
     end
@@ -46,7 +46,7 @@ class String
   
   def canonicalize_key_signature
     # key, accidental, tonality
-    self.sub(/ in ([A-G])(-sharp| sharp|-flat| flat)?( minor| major)?($|:|\.|,| |\/)/i) do |string|
+    self.sub(/ in ([A-G])(-sharp| sharp|-flat| flat)?( minor| major)?($| |\W)/i) do |string|
       if $2 == nil && $3 == nil && $4 == ' ' # no accidental, no tonality, but a space indicating more to come
         string
       else
@@ -56,13 +56,13 @@ class String
   end
 
   def canonicalize_opus
-    self.sub(/ Op( |\.|\. )?(\d+)($|:|,| |\/)/i) do |s|
+    self.sub(/ Op( |\.|\. )?(\d+)($| |\W)/i) do |s|
       " Op. #{$2}#{$3}"
     end
   end
   
   def canonicalize_piece_number
-    self.sub(/ No( |\.|\. )?(\d+)($|:|,| |\/)/i) do |s|
+    self.sub(/ No( |\.|\. )?(\d+)($| |\W)/i) do |s|
       " No. #{$2}#{$3}"
     end
   end
