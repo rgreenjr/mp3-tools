@@ -15,24 +15,24 @@ class Song
   end
 
   def normalize
-    fix_title
+    normalize_title
     clear_comments
   end
   
-  def fix_title
+  def normalize_title
     str = self.title
     str = str.remove_extraneous_spaces
     str = str.downcase_prepositions
     if classical?
-      str = str.canonicalize_key_signature
+      str = str.normalize_key_signature
       str = str.romanize_movement_numbers
-      str = str.canonicalize_piece_number
-      str = str.canonicalize_opus
+      str = str.normalize_piece_number
+      str = str.normalize_opus_number
     end
     self.title = str
   end
   
-  def fix_album
+  def normalize_album
     str = self.album
     str = str.remove_extraneous_spaces
     str = str.downcase_prepositions
@@ -86,16 +86,8 @@ class Song
     @info.tag2.TCON == "(32)" || @info.tag2.TCON == "Classical"
   end
 
-  def jazz?
-    @info.tag2.TCON == "(8)" || @info.tag2.TCON == "Jazz"
-  end
-
-  def valid?
-    @info.tag2.invalid_frames == nil
-  end
-  
   def to_s
-    "    " + title
+    "    #{title}"
   end
   
   private

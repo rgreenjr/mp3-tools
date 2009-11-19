@@ -33,8 +33,8 @@ class String
   end
 
   def downcase_prepositions
-    %w{A And As At By For From Of In On Or The To With}.inject(self) do |string, word| 
-      string.gsub(/(\w) #{word} /) do |m|
+    %w{a and as at by for from of in on or the to with}.inject(self) do |string, word| 
+      string.gsub(/(\w) #{word} /i) do |m|
         "#{$1} #{word.downcase} "
       end
     end
@@ -43,25 +43,22 @@ class String
   def romanize_movement_numbers
     self.sub(/: ([0-9]+)\. /) { |s| ": #{$1.to_roman}. " }
   end
-  
-  def canonicalize_key_signature
-    # key, accidental, tonality
+
+  # Normalizes the key, accidental and tonality
+  def normalize_key_signature
+    return self if self =~ / in (a)( minor| major)( \w)/i # handle phrases such as 'He was in a major rush'
     self.sub(/ in ([A-G])(-sharp| sharp|-flat| flat)?( minor| major)?($| |\W)/i) do |string|
-      if $2 == nil && $3 == nil && $4 == ' ' # no accidental, no tonality, but a space indicating more to come
-        string
-      else
-        " in #{$1.upcase}#{$2.downcase.tr('-', ' ') if $2}#{$3 ? $3.downcase : " major"}#{$4}"
-      end
+      " in #{$1.upcase}#{$2.downcase.tr('-', ' ') if $2}#{$3 ? $3.downcase : " major"}#{$4}"
     end
   end
 
-  def canonicalize_opus
+  def normalize_opus_number
     self.sub(/ Op( |\.|\. )?(\d+)($| |\W)/i) do |s|
       " Op. #{$2}#{$3}"
     end
   end
   
-  def canonicalize_piece_number
+  def normalize_piece_number
     self.sub(/ No( |\.|\. )?(\d+)($| |\W)/i) do |s|
       " No. #{$2}#{$3}"
     end
