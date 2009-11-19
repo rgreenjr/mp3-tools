@@ -1,14 +1,12 @@
-require 'artist'
-
 class Library
 
   attr_accessor :path
   
   def self.default
-    if `hostname`.strip == 'bourbon.local'
-      self.new("/Users/rgreen/Music/iTunes/iTunes Media/Music")
-    else
+    if `hostname`.strip == 'whiskey.local'
       self.new("/Volumes/Media/iTunes Media/Music")
+    else
+      self.new("/Users/rgreen/Music/iTunes/iTunes Media/Music")
     end
   end
 
@@ -22,10 +20,10 @@ class Library
 
   def each_song(artist_pattern='', album_pattern='', song_pattern='', &block)
     each_artist(artist_pattern) do |artist|
-      puts artist.name
+      puts artist
       # next unless STDIN.readline =~ /y/
       artist.each_album(album_pattern) do |album| 
-        puts "  " + album.name
+        puts album
         album.each_song(song_pattern) do |song|
           song.open do |mp3|
             yield song
@@ -44,7 +42,7 @@ class Library
   end
   
   def print(artist_pattern='', album_pattern='', song_pattern='')
-    each_song(artist_pattern, album_pattern, song_pattern) {|song| puts "    " + song.title }
+    each_song(artist_pattern, album_pattern, song_pattern) {|song| puts song }
   end
 
 end

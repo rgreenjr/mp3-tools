@@ -1,7 +1,3 @@
-require "rubygems"
-require 'mp3info'
-require 'string_extensions'
-
 class Song
   
   attr_accessor :path
@@ -98,12 +94,16 @@ class Song
     @info.tag2.invalid_frames == nil
   end
   
+  def to_s
+    "    " + title
+  end
+  
   private
   
   def write_tag(tag, value)
     return if value == @info.tag2[tag]
     puts "    * #{@info.tag2[tag]}\n   ** #{value}"
-    # @info.tag2[tag] = value
+    @info.tag2[tag] = value
   end
 
 end
