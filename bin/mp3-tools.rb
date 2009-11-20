@@ -17,9 +17,9 @@ optparse = OptionParser.new do |opts|
     options[:print] = true
   end
 
-  options[:list_missing_art] = false
-  opts.on( '-l', '--list_missing_art', 'Normalize library song titles') do
-    options[:list_missing_art] = true
+  options[:check] = false
+  opts.on( '-c', '--check', 'Check library for missing metadata') do
+    options[:check] = true
   end
 
   options[:normalize] = false
@@ -60,10 +60,10 @@ patterns = [options[:artist_pattern], options[:album_pattern], options[:song_pat
 
 if options[:print] == true
   library.print(*patterns)
-elsif options[:list_missing_art] == true
-  library.list_missing_art(*patterns)
+elsif options[:check] == true
+  library.check(*patterns)
 elsif options[:normalize] == true
-  library.normalize_songs(*patterns)
+  library.normalize(*patterns)
 else
   puts optparse
 end

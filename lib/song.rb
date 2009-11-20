@@ -1,19 +1,18 @@
 class Song
   
-  attr_accessor :path
+  attr_reader :path, :filename
 
   def initialize(path)
-    @path = path
+    @path, @filename = path, File.basename(path)
   end
 
   def open(&block)
     Mp3Info.open(@path) do |info|
       @info = info
-      raise "Missing ID3v2 title: #{@path}" unless title
       yield self
     end
   end
-
+  
   def normalize
     normalize_title
     clear_comments
@@ -77,9 +76,25 @@ class Song
   def comments=(value)
     write_tag('COMM', value)
   end
+  
+  def art
+    @info.tag2.APIC
+  end
+
+  def genre
+    @info.tag2.TCON
+  end
+
+  def has_title?
+    !title.to_s.remove_extraneous_spaces.empty?
+  end
+
+  def has_genre?
+    !genre.to_s.empty?
+  end
 
   def has_art?
-    @info.tag2.APIC != nil
+    art != nil
   end
 
   def classical?

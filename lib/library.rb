@@ -33,11 +33,11 @@ class Library
     end
   end
 
-  def list_missing_art(artist_pattern='*', album_pattern='*', song_pattern='*')
-    each_song(artist_pattern, album_pattern, song_pattern) {|song| puts "    * missing art: #{song.path}" unless song.has_art? }
+  def check(artist_pattern='*', album_pattern='*', song_pattern='*')
+    each_artist(artist_pattern) { |artist| artist.check(artist_pattern, song_pattern) }
   end
   
-  def normalize_songs(artist_pattern='*', album_pattern='*', song_pattern='*')
+  def normalize(artist_pattern='*', album_pattern='*', song_pattern='*')
     each_song(artist_pattern, album_pattern, song_pattern) {|song| song.normalize }
   end
   
