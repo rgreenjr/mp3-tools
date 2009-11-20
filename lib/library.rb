@@ -2,11 +2,11 @@ class Library
 
   attr_accessor :path, :interactive
   
-  def self.default
+  def self.default(interactive=false)
     if `hostname`.strip == 'whiskey.local'
-      self.new("/Volumes/Media/iTunes Media/Music")
+      self.new("/Volumes/Media/iTunes Media/Music", interactive)
     else
-      self.new("/Users/rgreen/Music/iTunes/iTunes Media/Music")
+      self.new("/Users/rgreen/Music/iTunes/iTunes Media/Music", interactive)
     end
   end
 
