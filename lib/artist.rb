@@ -6,8 +6,8 @@ class Artist
     @path, @name = path, File.basename(path)
   end
   
-  def each_album(pattern='', &block)
-    Dir.glob(File.join(@path, "*#{pattern}*")).each {|file| yield Album.new(file)}
+  def each_album(pattern='*', &block)
+    Dir.glob(File.join(@path, pattern)).each {|file| yield Album.new(file)}
   end
   
   def to_s

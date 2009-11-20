@@ -9,7 +9,7 @@ class Song
   def open(&block)
     Mp3Info.open(@path) do |info|
       @info = info
-      # raise "Missing ID3v2 title: #{path}" unless has_title?
+      raise "Missing ID3v2 title: #{@path}" unless title
       yield self
     end
   end

@@ -13,9 +13,11 @@ def parse_args
     puts "Usage: #{$0} \"<albums>/<artists>/<songs>\""
     exit
   end
+  args
 end
 
 library = Library.default
+# library.interactive = true
 library.print(*parse_args)
-# library.print_missing_art(*parse_args)
+# library.list_missing_art(*parse_args)
 # library.normalize_songs(*parse_args)

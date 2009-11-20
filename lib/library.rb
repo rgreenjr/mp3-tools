@@ -1,6 +1,6 @@
 class Library
 
-  attr_accessor :path
+  attr_accessor :path, :interactive
   
   def self.default
     if `hostname`.strip == 'whiskey.local'
@@ -10,22 +10,22 @@ class Library
     end
   end
 
-  def initialize(path)
-    @path = path
+  def initialize(path, interactive=false)
+    @path, @interactive = path, interactive
   end
 
-  def each_artist(pattern='', &block)
-    Dir.glob(File.join(@path, "*#{pattern}*")).map {|file| yield Artist.new(file)}
+  def each_artist(pattern='*', &block)
+    Dir.glob(File.join(@path, pattern)).each {|file| yield Artist.new(file)}
   end
 
-  def each_song(artist_pattern='', album_pattern='', song_pattern='', &block)
+  def each_song(artist_pattern='*', album_pattern='*', song_pattern='*', &block)
     each_artist(artist_pattern) do |artist|
-      puts artist
-      # next unless STDIN.readline =~ /y/
+      next unless continue_with?(artist)
       artist.each_album(album_pattern) do |album| 
         puts album
         album.each_song(song_pattern) do |song|
-          song.open do |mp3|
+          song.open do
+            # @current = song
             yield song
           end
         end
@@ -33,16 +33,29 @@ class Library
     end
   end
 
-  def print_missing_art(artist_pattern='', album_pattern='', song_pattern='')
+  def list_missing_art(artist_pattern='*', album_pattern='*', song_pattern='*')
     each_song(artist_pattern, album_pattern, song_pattern) {|song| puts "    * missing art: #{song.path}" unless song.has_art? }
   end
   
-  def normalize_songs(artist_pattern='', album_pattern='', song_pattern='')
+  def normalize_songs(artist_pattern='*', album_pattern='*', song_pattern='*')
     each_song(artist_pattern, album_pattern, song_pattern) {|song| song.normalize }
   end
   
-  def print(artist_pattern='', album_pattern='', song_pattern='')
+  def print(artist_pattern='*', album_pattern='*', song_pattern='*')
     each_song(artist_pattern, album_pattern, song_pattern) {|song| puts song }
+  end
+  
+  private
+  
+  def continue_with?(obj)
+    if @interactive
+      STDOUT.print "#{obj}: "
+      STDOUT.flush
+      STDIN.readline =~ /y|yes/i
+    else
+      puts obj
+      return true
+    end
   end
 
 end
