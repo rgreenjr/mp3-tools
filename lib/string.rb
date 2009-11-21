@@ -25,11 +25,11 @@ class String
   end
   
   def to_roman
-    ROMAN_NUMERALS[self.to_i]
+    ROMAN_NUMERALS[to_i]
   end
 
   def remove_extraneous_spaces
-    self.strip.squeeze(' ')
+    strip.squeeze(' ').gsub(/ \/ /, '/')
   end
 
   def downcase_prepositions
@@ -39,23 +39,23 @@ class String
   end
   
   def romanize_movement_numbers
-    self.sub(/: ([0-9]+)\. /) { ": #{$1.to_roman}. " }
+    sub(/: ([0-9]+)\. /) { ": #{$1.to_roman}. " }
   end
 
   # Normalizes the key, accidental and tonality
   def normalize_key_signature
     return self if self =~ / in (a)( minor| major)( \w)/i # handle phrases such as 'He was in a major rush'
-    self.sub(/ in ([A-G])(-sharp| sharp|-flat| flat)?( minor| major)?($|\W)/i) do
+    sub(/ in ([A-G])(-sharp| sharp|-flat| flat)?( minor| major)?($|\W)/i) do
       " in #{$1.upcase}#{$2.downcase.tr('-', ' ') if $2}#{$3 ? $3.downcase : " major"}#{$4}"
     end
   end
 
   def normalize_opus_number
-    self.sub(/ Op( |\.|\. )?(\d+)($|\W)/i) { " Op. #{$2}#{$3}" }
+    sub(/ Op( |\.|\. )?(\d+)($|\W)/i) { " Op. #{$2}#{$3}" }
   end
   
   def normalize_piece_number
-    self.sub(/ No( |\.|\. )?(\d+)($|\W)/i) { " No. #{$2}#{$3}" }
+    sub(/ No( |\.|\. )?(\d+)($|\W)/i) { " No. #{$2}#{$3}" }
   end
   
 end

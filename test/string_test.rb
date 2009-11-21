@@ -64,6 +64,11 @@ class StringExtensionTest < Test::Unit::TestCase
     assert_equal("Ballade No. 2, Op. 38", "Ballade No 2, Op. 38".normalize_piece_number)
     assert_equal("Ballade No. 2", "Ballade No 2".normalize_piece_number)
   end
+  
+  def test_remove_extraneous_spaces
+    assert_equal("The Continuing Story of Bungalow Bill", "    The   Continuing Story      of Bungalow Bill    ".remove_extraneous_spaces)
+    assert_equal("Rip It Up/Shake Rattle and Roll/Blue Suede Shoes", "Rip It Up / Shake Rattle and Roll / Blue Suede Shoes".remove_extraneous_spaces)
+  end
 
   def test_to_roman
     assert_equal("I",    "1".to_roman)
