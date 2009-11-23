@@ -51,7 +51,7 @@ class Library
   
   def continue_with?(obj)
     return true unless @interactive
-    STDOUT.print "#{obj}: "
+    STDOUT.print ": "
     STDOUT.flush
     STDIN.readline =~ /y|yes/i
   end

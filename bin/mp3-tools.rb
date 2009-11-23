@@ -9,52 +9,23 @@ require "lib/song"
 require 'lib/string'
 
 options = {
-  :action         => :print,
   :album_pattern  => '*',
   :artist_pattern => '*',
   :song_pattern   => '*',
-  :interactive    => false
+  :interactive    => false,
+  :action         => :print,
 }
 
 parser = OptionParser.new
-
 parser.banner = "Usage: mp3-tools.rb [options]"
-
-parser.on('-p', '--print', 'Print library contents') do
-  options[:action] = :print
-end
-
-parser.on('-c', '--check', 'Check library for missing metadata') do
-  options[:action] = :check
-end
-
-parser.on('-n', '--normalize', 'Normalize library songs') do
-  options[:action] = :normalize
-end
-
-parser.on('-a', '--artist_pattern [pattern]', String, 'Artist filtering pattern') do |pattern|
-  options[:artist_pattern] = pattern
-end
-
-parser.on('-b', '--album_pattern [pattern]', 'Album filtering pattern') do |pattern|
-  options[:album_pattern] = pattern
-end
-
-parser.on('-s', '--song_pattern [pattern]', 'Song filtering pattern') do |pattern|
-  options[:song_pattern] = pattern
-end
-
-parser.on('-i', '--interactive', 'Request confirmation before processing an artist') do |flag|
-  options[:interactive] = flag
-end
-
-parser.on('-h', '--help', 'Display this screen') do
-  puts parser
-  exit
-end
-
+parser.on('-p', '--print', 'Print library contents') { options[:action] = :print }
+parser.on('-c', '--check', 'Check library for missing metadata') { options[:action] = :check }
+parser.on('-n', '--normalize', 'Normalize library songs') { options[:action] = :normalize }
+parser.on('-a', '--artist_pattern [pattern]', String, 'Artist filtering pattern') { |pattern|  options[:artist_pattern] = pattern }
+parser.on('-b', '--album_pattern [pattern]', 'Album filtering pattern') { |pattern| options[:album_pattern] = pattern }
+parser.on('-s', '--song_pattern [pattern]', 'Song filtering pattern') { |pattern| options[:song_pattern] = pattern }
+parser.on('-i', '--interactive', 'Request confirmation before processing an artist') { |flag| options[:interactive] = flag }
+parser.on('-h', '--help', 'Display this screen') { puts parser; exit }
 parser.parse!
 
-action = options.delete(:action)
-
-Library.default(options).send(action)
+Library.default(options).send(options[:action])
