@@ -13,9 +13,19 @@ class Song
     end
   end
   
+  def check
+    open do
+      puts "    * missing title:   #{@filename}" unless has_title?
+      puts "    * missing genre:   #{@filename}" unless has_genre?
+      puts "    * missing artwork: #{@filename}" unless has_art?
+    end
+  end
+  
   def normalize
-    normalize_title
-    clear_comments
+    open do
+      normalize_title
+      clear_comments
+    end
   end
   
   def normalize_title
@@ -40,7 +50,7 @@ class Song
   
   def clear_comments
     if comments != nil
-      puts "  * deleting comment: #{comments}"
+      puts "    * deleting comment: #{comments}"
       @info.tag2.delete('COMM')
     end
   end
@@ -102,7 +112,7 @@ class Song
   end
 
   def to_s
-    "    #{title}"
+    "    #{@filename}"
   end
   
   private

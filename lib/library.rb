@@ -1,61 +1,59 @@
 class Library
 
-  attr_accessor :path, :interactive
+  attr_accessor :path, :interactive, :artist_pattern, :album_pattern, :song_pattern
   
-  def self.default(interactive=false)
+  def self.default(options={})
     if `hostname`.strip == 'whiskey.local'
-      self.new("/Volumes/Media/iTunes Media/Music", interactive)
+      self.new("/Volumes/Media/iTunes Media/Music", options)
     else
-      self.new("/Users/rgreen/Music/iTunes/iTunes Media/Music", interactive)
+      self.new("/Users/rgreen/Music/iTunes/iTunes Media/Music", options)
     end
   end
 
-  def initialize(path, interactive=false)
-    @path, @interactive = path, interactive
+  def initialize(path, options={})
+    @path = path
+    @artist_pattern = options[:artist_pattern] || '*'
+    @album_pattern  = options[:album_pattern] || '*'
+    @song_pattern   = options[:song_pattern] || '*'
+    @interactive    = options[:interactive] || false
   end
-
-  def each_artist(pattern='*', &block)
-    Dir.glob(File.join(@path, pattern)).each {|file| yield Artist.new(file)}
+  
+  def each_artist(&block)
+    Dir.glob(File.join(@path, @artist_pattern)).each {|file| yield Artist.new(file)}
   end
-
-  def each_song(artist_pattern='*', album_pattern='*', song_pattern='*', &block)
-    each_artist(artist_pattern) do |artist|
+  
+  def traverse(&block)
+    each_artist do |artist|
       next unless continue_with?(artist)
-      artist.each_album(album_pattern) do |album| 
-        puts album
-        album.each_song(song_pattern) do |song|
-          song.open do
-            # @current = song
-            yield song
-          end
+      yield artist
+      artist.each_album(@album_pattern) do |album| 
+        yield album
+        album.each_song(@song_pattern) do |song|
+          yield song
         end
       end
     end
   end
 
-  def check(artist_pattern='*', album_pattern='*', song_pattern='*')
-    each_artist(artist_pattern) { |artist| artist.check(artist_pattern, song_pattern) }
+  def print
+    traverse { |item| puts item }
   end
   
-  def normalize(artist_pattern='*', album_pattern='*', song_pattern='*')
-    each_song(artist_pattern, album_pattern, song_pattern) {|song| song.normalize }
+  def check
+    traverse { |item| item.check }
   end
   
-  def print(artist_pattern='*', album_pattern='*', song_pattern='*')
-    each_song(artist_pattern, album_pattern, song_pattern) {|song| puts song }
+  def normalize
+    traverse { |item| item.normalize }
   end
   
   private
   
   def continue_with?(obj)
-    if @interactive
-      STDOUT.print "#{obj}: "
-      STDOUT.flush
-      STDIN.readline =~ /y|yes/i
-    else
-      puts obj
-      return true
-    end
+    return true unless @interactive
+    STDOUT.print "#{obj}: "
+    STDOUT.flush
+    STDIN.readline =~ /y|yes/i
   end
 
 end

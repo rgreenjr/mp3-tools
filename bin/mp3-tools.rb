@@ -8,62 +8,53 @@ require "lib/album"
 require "lib/song"
 require 'lib/string'
 
-options = {}
-optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: mp3-tools.rb [options]"
+options = {
+  :action         => :print,
+  :album_pattern  => '*',
+  :artist_pattern => '*',
+  :song_pattern   => '*',
+  :interactive    => false
+}
 
-  options[:print] = false
-  opts.on( '-p', '--print', 'Print library contents') do
-    options[:print] = true
-  end
+parser = OptionParser.new
 
-  options[:check] = false
-  opts.on( '-c', '--check', 'Check library for missing metadata') do
-    options[:check] = true
-  end
+parser.banner = "Usage: mp3-tools.rb [options]"
 
-  options[:normalize] = false
-  opts.on( '-n', '--normalize', 'Normalize library song titles') do
-    options[:normalize] = true
-  end
-
-  options[:artist_pattern] = '*'
-  opts.on( '-a', '--artist_pattern [pattern]', String, 'Artist filtering pattern') do |pattern|
-    options[:artist_pattern] = pattern
-  end
-
-  options[:album_pattern] = '*'
-  opts.on( '-b', '--album_pattern [pattern]', 'Album filtering pattern') do |pattern|
-    options[:album_pattern] = pattern
-  end
-
-  options[:song_pattern] = '*'
-  opts.on( '-s', '--song_pattern [pattern]', 'Song filtering pattern') do |pattern|
-    options[:song_pattern] = pattern
-  end
-
-  options[:interactive] = false
-  opts.on( '-i', '--interactive', 'Request confirmation before processing an artist') do |pattern|
-    options[:interactive] = pattern
-  end
-
-  opts.on('-h', '--help', 'Display this screen') do
-    puts opts
-    exit
-  end
+parser.on('-p', '--print', 'Print library contents') do
+  options[:action] = :print
 end
-optparse.parse!
 
-library = Library.default(options[:interactive])
-
-patterns = [options[:artist_pattern], options[:album_pattern], options[:song_pattern]]
-
-if options[:print] == true
-  library.print(*patterns)
-elsif options[:check] == true
-  library.check(*patterns)
-elsif options[:normalize] == true
-  library.normalize(*patterns)
-else
-  puts optparse
+parser.on('-c', '--check', 'Check library for missing metadata') do
+  options[:action] = :check
 end
+
+parser.on('-n', '--normalize', 'Normalize library songs') do
+  options[:action] = :normalize
+end
+
+parser.on('-a', '--artist_pattern [pattern]', String, 'Artist filtering pattern') do |pattern|
+  options[:artist_pattern] = pattern
+end
+
+parser.on('-b', '--album_pattern [pattern]', 'Album filtering pattern') do |pattern|
+  options[:album_pattern] = pattern
+end
+
+parser.on('-s', '--song_pattern [pattern]', 'Song filtering pattern') do |pattern|
+  options[:song_pattern] = pattern
+end
+
+parser.on('-i', '--interactive', 'Request confirmation before processing an artist') do |flag|
+  options[:interactive] = flag
+end
+
+parser.on('-h', '--help', 'Display this screen') do
+  puts parser
+  exit
+end
+
+parser.parse!
+
+action = options.delete(:action)
+
+Library.default(options).send(action)

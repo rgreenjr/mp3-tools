@@ -10,9 +10,12 @@ class Artist
     Dir.glob(File.join(@path, artist_pattern)).each {|file| yield Album.new(file)}
   end
   
-  def check(album_pattern='*', song_pattern='*')
+  def check
     puts self
-    each_album(album_pattern) { |album| album.check(song_pattern) }
+  end
+  
+  def normalize
+    puts self
   end
   
   def to_s
