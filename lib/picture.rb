@@ -4,8 +4,9 @@ class Picture
   
   attr_accessor :text_encoding, :mime_type, :type, :description, :data
   
-  def initialize(apic_tag)
-    @text_encoding, @mime_type, @type, @description, @data = apic_tag.unpack("c Z* c Z* a*")
+  def initialize(apic)
+    apic = apic.first if apic.class == Array
+    @text_encoding, @mime_type, @type, @description, @data = apic.unpack("c Z* c Z* a*")
   end
   
   def image
@@ -20,8 +21,8 @@ class Picture
     image.columns
   end
   
-  def undersized?
-    (width < 600 && height < 600)
+  def undersized?(pixels=600)
+    (width < pixels && height < pixels)
   end
   
   def to_s

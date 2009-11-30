@@ -1,6 +1,6 @@
 class Tag
 
-  ADMIT = [
+  RECOMMENDED = [
     'APIC', # Attached picture
     'COMM', # Comments
     'TALB', # Album/Movie/Show title
@@ -46,7 +46,7 @@ class Tag
     'TSST', # Set subtitle
   ]
   
-  REJECT = [
+  EXTRANEOUS = [
     'COMM', # Comments
     'GEOB', # General encapsulated object
     'LINK', # Linked information
@@ -107,16 +107,16 @@ class Tag
     'TSP ',
   ]
 
-  def self.admit?(tag)
-    ADMIT.include?(tag)
+  def self.recommended?(tag)
+    RECOMMENDED.include?(tag)
   end
 
-  def self.reject?(tag)
-    REJECT.include?(tag)
+  def self.extraneous?(tag)
+    EXTRANEOUS.include?(tag)
   end
 
   def self.known?(tag)
-    admit?(tag) || reject?(tag)
+    recommended?(tag) || extraneous?(tag)
   end
 
 end

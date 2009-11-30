@@ -31,14 +31,18 @@ class Song
       @notes.clear
       self.title = normalize_title
       delete_comments
-      delete_rejected_tags
+      delete_extraneous_tags
       delete_tag_1
       print_notes
     end
   end
   
+  def tag(name)
+    @info.tag2[name]
+  end
+  
   def title
-    @info.tag2.TIT2
+    tag('TIT2')
   end
 
   def title=(value)
@@ -46,28 +50,24 @@ class Song
   end
 
   def artist
-    @info.tag2.TPE1
+    tag('TPE1')
   end
 
   def album
-    @info.tag2.TALB
+    tag('TALB')
   end
 
   def comments
-    @info.tag2.COMM
+    tag('COMM')
   end
 
   def genre
-    @info.tag2.TCON
+    tag('TCON')
   end
-
+  
   def picture
-    return nil unless @info.tag2.APIC
-    if @info.tag2.APIC.class == Array
-      @picture ||= Picture.new(@info.tag2.APIC.first)
-    else
-      @picture ||= Picture.new(@info.tag2.APIC)
-    end
+    return nil unless tag('APIC')
+    @picture ||= Picture.new(tag('APIC'))
   end
   
   def has_title?
@@ -79,7 +79,7 @@ class Song
   end
 
   def classical?
-    @info.tag2.TCON == "(32)" || @info.tag2.TCON == "Classical"
+    genre == "(32)" || genre == "Classical"
   end
   
   def to_s
@@ -89,15 +89,16 @@ class Song
   private
 
   def check_tags
-    @notes << "has id3v1 tag" if @info.hastag1?
+    @notes << "redundant id3v1 tag" if @info.hastag1?
     @notes << "missing id3v2 tag" unless @info.hastag2?
     @notes << "missing title" unless has_title?
     @notes << "missing genre" unless has_genre?
-    @info.tag2.each { |key, value| @notes << "rejected tag: #{key} = #{value}" unless Tag.admit?(key) }
+    @info.tag2.each { |key, value| @notes << "extraneous tag: #{key} = #{value}" unless Tag.recommended?(key) }
     @info.tag2.each { |key, value| @notes << "unknown tag:  #{key.inspect} = #{value}" unless Tag.known?(key) }
   end
   
   def check_picture
+    # add check for more than one picture
     return if picture && !picture.undersized?
     @notes << "missing picture" unless picture
     @notes << "undersized picture: #{picture}" if picture && picture.undersized?
@@ -131,9 +132,9 @@ class Song
     end
   end
   
-  def delete_rejected_tags
+  def delete_extraneous_tags
     @info.tag2.each do |key, value|
-      if Tag.reject?(key)
+      if Tag.extraneous?(key)
         @notes << "deleting tag: #{key} = #{value}"
         @info.tag2.delete(key)
       end

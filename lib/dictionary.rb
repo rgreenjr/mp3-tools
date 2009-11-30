@@ -2,16 +2,18 @@ require 'raspell'
 
 class Dictionary
   
-  # daren't
-  # there'll
-  # that'll
-  # what'll
-  # when's
-  
   def self.dictionaries
     @dictionaries ||= %w{en es fr it de la grc ru}.map do |lang| 
       aspell = Aspell.new(lang)
-      load_custom_words(aspell) if lang == 'en'
+      if lang == 'en'
+        File.open('words.txt', 'r') do |file|
+          file.each do |word|
+            word.strip!
+            aspell.add_to_session(word)
+            aspell.add_to_session(word.capitalize)
+          end
+        end
+      end
       aspell
     end
   end
@@ -25,15 +27,4 @@ class Dictionary
     misspelled
   end
   
-  private
-  
-  def self.load_custom_words(dictionary)
-    File.open('./words.txt', 'r') do |file|
-      file.each do |word|
-        dictionary.add_to_session(word.strip)
-        dictionary.add_to_session(word.capitalize.strip)
-      end
-    end
-  end
-    
 end
