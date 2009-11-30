@@ -39,6 +39,9 @@ class StringExtensionTest < Test::Unit::TestCase
     assert_equal("The Musical Offering, BWV 1079: Fuga canonica in Epidiapente", "The Musical Offering, BWV 1079: Fuga canonica in Epidiapente".normalize_key_signature)
     assert_equal("He Was In A Major Rush", "He Was In A Major Rush".normalize_key_signature)
     assert_equal("She Was In A Minor Depression", "She Was In A Minor Depression".normalize_key_signature)
+    assert_equal("Adagio (From Oboe Concerto in C minor)", "Adagio (From Oboe Concerto in C minor)".normalize_key_signature)
+    assert_equal("The Old Woman Who Live in a Shoe", "The Old Woman Who Live in a Shoe".normalize_key_signature)
+    assert_equal("Billy the Kid (Ballet Suite): II. Street in a Frontier Town", "Billy the Kid (Ballet Suite): II. Street in a Frontier Town".normalize_key_signature)
   end
   
   def test_downcase_prepositions
@@ -48,7 +51,6 @@ class StringExtensionTest < Test::Unit::TestCase
     assert_equal("Rain - A Soundtrack for Meditation", "Rain - A Soundtrack For Meditation".downcase_prepositions)
     assert_equal("Hark! The Herald Angels Sings", "Hark! The Herald Angels Sings".downcase_prepositions)
     assert_equal("2112: Overture/The Temples of Syrinx", "2112: Overture/The Temples of Syrinx".downcase_prepositions)
-    assert_equal("Billy the Kid (Ballet Suite): II. Street in a Frontier Town", "Billy the Kid (Ballet Suite): II. Street in A Frontier Town".downcase_prepositions)
   end
 
   def test_normalize_opus_number
