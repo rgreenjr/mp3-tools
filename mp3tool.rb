@@ -1,16 +1,12 @@
 #!/usr/bin/env ruby -w
-require "rubygems"
+require 'rubygems'
 require 'mp3info'
 require 'optparse'
-require "lib/library"
-require "lib/artist"
-require "lib/album"
-require "lib/song"
-require "lib/tag"
-require "lib/picture"
-require "lib/dictionary"
-require 'lib/string'
-require 'lib/log'
+
+dir = File.expand_path(File.dirname(__FILE__))
+Dir.glob("#{dir}/lib/*").each do |file| 
+  require file
+end
 
 options = {
   :album_pattern  => '*',

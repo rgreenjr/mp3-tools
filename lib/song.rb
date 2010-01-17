@@ -44,23 +44,23 @@ class Song
   def title
     tag('TIT2')
   end
-
+  
   def title=(value)
     write_tag('TIT2', value)
   end
-
+  
   def artist
     tag('TPE1')
   end
-
+  
   def album
     tag('TALB')
   end
-
+  
   def comments
     tag('COMM')
   end
-
+  
   def genre
     tag('TCON')
   end
@@ -93,8 +93,8 @@ class Song
     @notes << "missing id3v2 tag" unless @info.hastag2?
     @notes << "missing title" unless has_title?
     @notes << "missing genre" unless has_genre?
-    @info.tag2.each { |key, value| @notes << "extraneous tag: #{key} = #{value}" unless Tag.recommended?(key) }
-    @info.tag2.each { |key, value| @notes << "unknown tag:  #{key.inspect} = #{value}" unless Tag.known?(key) }
+    @info.tag2.each { |key, value| @notes << "extraneous tag: #{key} = #{value}" if Frame.extraneous?(key) }
+    @info.tag2.each { |key, value| @notes << "unknown tag:  #{key.inspect} = #{value}" unless Frame.known?(key) }
   end
   
   def check_picture
@@ -134,7 +134,7 @@ class Song
   
   def delete_extraneous_tags
     @info.tag2.each do |key, value|
-      if Tag.extraneous?(key)
+      if Frame.extraneous?(key)
         @notes << "deleting tag: #{key} = #{value}"
         @info.tag2.delete(key)
       end
