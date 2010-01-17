@@ -1,6 +1,6 @@
 class Frame
 
-  FRAMES = {
+  CODES = {
     "APIC"        => ["Attached picture"],
     "COMM"        => ["Comments"],
     "TALB"        => ["Album/Movie/Show title"],
@@ -102,11 +102,11 @@ class Frame
   }
 
   def self.extraneous?(name)
-    FRAMES[name] && FRAMES[name].last == true
+    CODES[name] && CODES[name].last == true
   end
 
   def self.known?(name)
-    FRAMES[name] != nil
+    CODES[name] != nil
   end
   
 end

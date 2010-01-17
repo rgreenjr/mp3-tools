@@ -1,4 +1,5 @@
 require 'cgi'
+require 'mp3info'
 
 class Song
   

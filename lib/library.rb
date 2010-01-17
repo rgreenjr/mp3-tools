@@ -13,9 +13,9 @@ class Library
   def initialize(path, options={})
     @path = path
     @artist_pattern = options[:artist_pattern] || '*'
-    @album_pattern  = options[:album_pattern] || '*'
-    @title_pattern  = options[:title_pattern] || '*'
-    @interactive    = options[:interactive] || false
+    @album_pattern  = options[:album_pattern]  || '*'
+    @title_pattern  = options[:title_pattern]  || '*'
+    @interactive    = options[:interactive]    || false
   end
   
   def each_artist(&block)
