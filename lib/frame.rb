@@ -1,122 +1,112 @@
-class Tag
+class Frame
 
-  RECOMMENDED = [
-    'APIC', # Attached picture
-    'COMM', # Comments
-    'TALB', # Album/Movie/Show title
-    'TCOM', # Composer
-    'TCON', # Content type
-    'TDRC', # Recording time
-    'TFLT', # File type
-    'TIT1', # Content group description
-    'TIT2', # Title/songname/content description
-    'TIT3', # Subtitle/Description refinement
-    'TOPE', # Original artist(s)/performer(s)
-    'TPOS', # Part of a set
-    'TPE1', # Lead performer(s)/Soloist(s)
-    'TPE2', # Band/orchestra/accompaniment
-    'TPE3', # Conductor/performer refinement
-    'TPE4', # Interpreted, remixed, or otherwise modified by
-    'TPUB', # Publisher
-    'TRCK', # Track number/Position in set
-    'USLT', # Unsynchronised lyric/text transcription
+  FRAMES = {
+    "APIC"        => ["Attached picture"],
+    "COMM"        => ["Comments"],
+    "TALB"        => ["Album/Movie/Show title"],
+    "TCOM"        => ["Composer"],
+    "TCON"        => ["Content type"],
+    "TDRC"        => ["Recording time"],
+    "TFLT"        => ["File type"],
+    "TIT1"        => ["Content group description"],
+    "TIT2"        => ["Title/songname/content description"],
+    "TIT3"        => ["Subtitle/Description refinement"],
+    "TOPE"        => ["Original artist(s)/performer(s)"],
+    "TPOS"        => ["Part of a set"],
+    "TPE1"        => ["Lead performer(s)/Soloist(s)"],
+    "TPE2"        => ["Band/orchestra/accompaniment"],
+    "TPE3"        => ["Conductor/performer refinement"],
+    "TPE4"        => ["Interpreted, remixed, or otherwise modified by"],
+    "TPUB"        => ["Publisher"],
+    "TRCK"        => ["Track number/Position in set"],
+    "USLT"        => ["Unsynchronised lyric/text transcription"],
+    "TCMP"        => ["iTunes compilation flag"],
+    "TYER"        => ["*** unknown frame type ***"],
+    "disc_number" => [""],
+    "disc_total"  => [""],
+    "AENC"        => ["Audio encryption"],
+    "ASPI"        => ["Audio seek point index"],
+    "COMR"        => ["Commercial frame"],
+    "ENCR"        => ["Encryption method registration"],
+    "EQU2"        => ["Equalisation"],
+    "ETCO"        => ["Event timing codes"],
+    "GRID"        => ["Group identification registration"],
+    "OWNE"        => ["Ownership frame"],
+    "RBUF"        => ["Recommended buffer size"],
+    "SEEK"        => ["Seek frame"],
+    "SIGN"        => ["Signature frame"],
+    "SYLT"        => ["Synchronised lyric/text"],
+    "SYTC"        => ["Synchronised tempo codes"],
+    "TEXT"        => ["Lyricist/Text writer"],
+    "TSOA"        => ["Album sort order"],
+    "TSOP"        => ["Performer sort order"],
+    "TSOT"        => ["Title sort order"],
+    "TSST"        => ["Set subtitle"],
+    "COMM"        => ["Comments", true],
+    "GEOB"        => ["General encapsulated object", true],
+    "LINK"        => ["Linked information", true],
+    "MCDI"        => ["Music CD identifier", true],
+    "MLLT"        => ["MPEG location lookup table", true],
+    "NCON"        => ["", true],
+    "PRIV"        => ["Private frame", true],
+    "PCNT"        => ["Play counter", true],
+    "POPM"        => ["Popularimeter", true],
+    "POSS"        => ["Position synchronisation frame", true],
+    "RVA2"        => ["Relative volume adjustment", true],
+    "RVRB"        => ["Reverb", true],
+    "RVAD"        => ["", true],
+    "TBPM"        => ["BPM (beats per minute)", true],
+    "TCOP"        => ["Copyright message", true],
+    "TDEN"        => ["Encoding time", true],
+    "TDLY"        => ["Playlist delay", true],
+    "TDOR"        => ["Original release time", true],
+    "TDRL"        => ["Release time", true],
+    "TDTG"        => ["Tagging time", true],
+    "TENC"        => ["Encoded by", true],
+    "TIPL"        => ["Involved people list", true],
+    "TKEY"        => ["Initial key", true],
+    "TLAN"        => ["Language(s)", true],
+    "TLEN"        => ["Length", true],
+    "TMCL"        => ["Musician credits list", true],
+    "TMED"        => ["Media type", true],
+    "TMOO"        => ["Mood", true],
+    "TOAL"        => ["Original album/movie/show title", true],
+    "TOFN"        => ["Original filename", true],
+    "TOLY"        => ["Original lyricist(s)/text writer(s)", true],
+    "TOWN"        => ["File owner/licensee", true],
+    "TPRO"        => ["Produced notice", true],
+    "TRSN"        => ["Internet radio station name", true],
+    "TRSO"        => ["Internet radio station owner", true],
+    "TSRC"        => ["ISRC (international standard recording code)", true],
+    "TSSE"        => ["Software/Hardware and settings used for encoding", true],
+    "TXXX"        => ["User defined text information frame", true],
+    "UFID"        => ["Unique file identifier", true],
+    "USER"        => ["Terms of use", true],
+    "WCOM"        => ["Commercial information", true],
+    "WCOP"        => ["Copyright/Legal information", true],
+    "WOAF"        => ["Official audio file webpage", true],
+    "WOAR"        => ["Official artist/performer webpage", true],
+    "WOAS"        => ["Official audio source webpage", true],
+    "WORS"        => ["Official Internet radio station homepage", true],
+    "WPAY"        => ["Payment", true],
+    "WPUB"        => ["Publishers official webpage", true],
+    "WXXX"        => ["User defined URL link frame", true],
+    "XDOR"        => ["MusicBrainz’ TDOR equivalent", true],
+    "XSOP"        => ["MusicBrainz’ TSOP equivalent", true],
+    "RGAD"        => ["Replay Gain Adjustment", true],
+    "TSIZ"        => ["Size", true],
+    "TDAT"        => ["*** unknown frame type ***", true],
+    "TCP\000"     => ["*** unknown frame type ***", true],
+    "CM1\000"     => ["*** unknown frame type ***", true],
+    "TSP "        => ["*** unknown frame type ***", true],
+  }
 
-    'TCMP', # iTunes's compilation flag
-    'TYER', #
-    'disc_number', #
-    'disc_total', #
+  def self.extraneous?(name)
+    FRAMES[name] && FRAMES[name].last == true
+  end
 
-    'AENC', # Audio encryption
-    'ASPI', # Audio seek point index
-    'COMR', # Commercial frame
-    'ENCR', # Encryption method registration
-    'EQU2', # Equalisation
-    'ETCO', # Event timing codes
-    'GRID', # Group identification registration
-    'OWNE', # Ownership frame
-    'RBUF', # Recommended buffer size
-    'SEEK', # Seek frame
-    'SIGN', # Signature frame
-    'SYLT', # Synchronised lyric/text
-    'SYTC', # Synchronised tempo codes
-    'TEXT', # Lyricist/Text writer
-    'TSOA', # Album sort order
-    'TSOP', # Performer sort order
-    'TSOT', # Title sort order
-    'TSST', # Set subtitle
-  ]
+  def self.known?(name)
+    FRAMES[name] != nil
+  end
   
-  EXTRANEOUS = [
-    'COMM', # Comments
-    'GEOB', # General encapsulated object
-    'LINK', # Linked information
-    'MCDI', # Music CD identifier
-    'MLLT', # MPEG location lookup table
-    'NCON', #
-    'PRIV', # Private frame
-    'PCNT', # Play counter
-    'POPM', # Popularimeter
-    'POSS', # Position synchronisation frame
-    'RVA2', # Relative volume adjustment
-    'RVRB', # Reverb
-    'RVAD', #
-    'TBPM', # BPM (beats per minute)
-    'TCOP', # Copyright message
-    'TDEN', # Encoding time
-    'TDLY', # Playlist delay
-    'TDOR', # Original release time
-    'TDRL', # Release time
-    'TDTG', # Tagging time
-    'TENC', # Encoded by
-    'TIPL', # Involved people list
-    'TKEY', # Initial key
-    'TLAN', # Language(s)
-    'TLEN', # Length
-    'TMCL', # Musician credits list
-    'TMED', # Media type
-    'TMOO', # Mood
-    'TOAL', # Original album/movie/show title
-    'TOFN', # Original filename
-    'TOLY', # Original lyricist(s)/text writer(s)
-    'TOWN', # File owner/licensee
-    'TPRO', # Produced notice
-    'TRSN', # Internet radio station name
-    'TRSO', # Internet radio station owner
-    'TSRC', # ISRC (international standard recording code)
-    'TSSE', # Software/Hardware and settings used for encoding
-    'TXXX', # User defined text information frame
-    'UFID', # Unique file identifier
-    'USER', # Terms of use
-    'WCOM', # Commercial information
-    'WCOP', # Copyright/Legal information
-    'WOAF', # Official audio file webpage
-    'WOAR', # Official artist/performer webpage
-    'WOAS', # Official audio source webpage
-    'WORS', # Official Internet radio station homepage
-    'WPAY', # Payment
-    'WPUB', # Publishers official webpage
-    'WXXX', # User defined URL link frame
-    
-    'XDOR', # MusicBrainz’ TDOR equivalent
-    'XSOP', # MusicBrainz’ TSOP equivalent
-    'RGAD', # Replay Gain Adjustment
-    'TSIZ', # Size
-    'TDAT',
-    "TCP\000",
-    "CM1\000",
-    'TSP ',
-  ]
-
-  def self.recommended?(tag)
-    RECOMMENDED.include?(tag)
-  end
-
-  def self.extraneous?(tag)
-    EXTRANEOUS.include?(tag)
-  end
-
-  def self.known?(tag)
-    recommended?(tag) || extraneous?(tag)
-  end
-
 end
