@@ -7,7 +7,7 @@ class Artist
   end
   
   def each_album(artist_pattern='*', &block)
-    Dir.glob(File.join(@path, artist_pattern)).each {|file| yield Album.new(file)}
+    Dir.glob(File.join(@path, artist_pattern)).each {|file| yield Album.new(file, self)}
   end
   
   def check

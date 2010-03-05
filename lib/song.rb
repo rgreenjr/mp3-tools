@@ -3,10 +3,10 @@ require 'mp3info'
 
 class Song
   
-  attr_reader :path, :filename
+  attr_reader :path, :filename, :album
 
-  def initialize(path)
-    @path, @filename, @notes = path, File.basename(path), []
+  def initialize(path, album)
+    @path, @filename, @notes, @album = path, File.basename(path), [], album
   end
 
   def open(&block)
@@ -19,6 +19,7 @@ class Song
   def check
     open do
       @notes.clear
+      check_artist
       check_title
       check_tags
       check_picture
@@ -31,6 +32,7 @@ class Song
     open do
       @notes.clear
       self.title = normalize_title
+      normalize_artist
       delete_comments
       delete_extraneous_tags
       delete_tag_1
@@ -54,9 +56,17 @@ class Song
     tag('TPE1')
   end
   
-  def album
-    tag('TALB')
+  def album_artist
+    tag('TPE2')
   end
+  
+  def album_artist=(value)
+    write_tag('TPE2', value)
+  end
+  
+  # def album
+  #   tag('TALB')
+  # end
   
   def comments
     tag('COMM')
@@ -83,11 +93,25 @@ class Song
     genre == "(32)" || genre == "Classical"
   end
   
+  def compilation?
+    @album.artist.to_s == 'Compilations'
+  end
+  
   def to_s
     "    #{@filename}"
   end
   
+  def print_tags
+    @info.tag2.each { |key, value| puts "#{key} = #{value}" unless key == 'APIC' }
+  end
+  
   private
+  
+  def check_artist
+    @notes << "missing artist" unless artist
+    @notes << "missing album_artist" unless album_artist
+    @notes << "artist and album_artist don't match (#{artist} vs #{album_artist})" unless artist == album_artist
+  end
 
   def check_tags
     @notes << "redundant id3v1 tag" if @info.hastag1?
@@ -103,7 +127,7 @@ class Song
     return if picture && !picture.undersized?
     @notes << "missing picture" unless picture
     @notes << "undersized picture: #{picture}" if picture && picture.undersized?
-    Log.picture_error(artist, album)
+    Log.picture_error(artist, @album.to_s)
   end
   
   def check_title
@@ -124,6 +148,13 @@ class Song
       str = str.normalize_opus_number
     end
     str
+  end
+  
+  def normalize_artist
+    return if compilation? || !artist
+    if artist != album_artist
+      self.album_artist = artist
+    end
   end
   
   def delete_comments
@@ -151,7 +182,7 @@ class Song
 
   def write_tag(tag, value)
     return if value == @info.tag2[tag]
-    puts "    * #{@info.tag2[tag]}\n   ** #{value}"
+    puts "    * #{tag}: #{@info.tag2[tag]} => #{value}"
     @info.tag2[tag] = value
   end
   
