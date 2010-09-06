@@ -109,8 +109,10 @@ class Song
   
   def check_artist
     @notes << "missing artist" unless artist
-    @notes << "missing album_artist" unless album_artist
-    @notes << "artist and album_artist don't match (#{artist} vs #{album_artist})" unless artist == album_artist
+    unless compilation?
+      @notes << "missing album_artist" unless album_artist
+      @notes << "artist and album_artist don't match (#{artist} vs #{album_artist})" unless artist == album_artist
+    end
   end
 
   def check_tags
@@ -152,7 +154,7 @@ class Song
   
   def normalize_artist
     return if compilation? || !artist
-    if artist != album_artist
+    if artist != album_artist && !compilation?
       self.album_artist = artist
     end
   end
